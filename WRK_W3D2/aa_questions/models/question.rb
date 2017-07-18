@@ -1,24 +1,12 @@
-require_relative 'questions_database'
+# require_relative 'questions_database'
+# require_relative 'model_base'
 
-class Question
 
+class Question < ModelBase
+
+  TABLE_NAME = 'questions'
   attr_reader :id, :author_id
   attr_accessor :title, :body
-
-  def self.find_by_id(id)
-    question = QuestionsDatabase.instance.execute(<<-SQL, id
-      SELECT
-        *
-      FROM
-        questions
-      WHERE
-        id = ?
-    SQL
-    )
-    return nil if question.count < 1
-    # debugger
-    Question.new(question.first)
-  end
 
   def self.find_by_author_id(author_id)
     questions = QuestionsDatabase.instance.execute(<<-SQL, author_id
@@ -49,28 +37,28 @@ class Question
     @author_id = options['author_id']
   end
 
-  def save
-    if @id
-      QuestionsDatabase.instance.execute(<<-SQL, @title, @body, @author_id, @id
-        UPDATE
-          questions
-        SET
-          title = ?, body = ?, author_id = ?
-        WHERE
-          id = ?
-      SQL
-      )
-    else
-      QuestionsDatabase.instance.execute(<<-SQL, @title, @body, @author_id
-        INSERT INTO
-          questions(title, body, author_id)
-        VALUES
-        ( ? , ?, ? )
-      SQL
-      )
-      @id = QuestionsDatabase.instance.last_insert_row_id
-    end
-  end
+  # def save
+  #   if @id
+  #     QuestionsDatabase.instance.execute(<<-SQL, @title, @body, @author_id, @id
+  #       UPDATE
+  #         questions
+  #       SET
+  #         title = ?, body = ?, author_id = ?
+  #       WHERE
+  #         id = ?
+  #     SQL
+  #     )
+  #   else
+  #     QuestionsDatabase.instance.execute(<<-SQL, @title, @body, @author_id
+  #       INSERT INTO
+  #         questions(title, body, author_id)
+  #       VALUES
+  #       ( ? , ?, ? )
+  #     SQL
+  #     )
+  #     @id = QuestionsDatabase.instance.last_insert_row_id
+  #   end
+  # end
 
   def author
     author = QuestionsDatabase.instance.execute(<<-SQL, @author_id

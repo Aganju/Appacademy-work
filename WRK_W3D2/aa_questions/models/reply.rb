@@ -1,22 +1,10 @@
-require_relative 'questions_database'
 
-class Reply
+class Reply < ModelBase
+
+  TABLE_NAME = 'replies'
 
   attr_reader :id, :author_id, :question_id, :parent_id
   attr_accessor :body
-
-  def self.find_by_id(id)
-    reply = QuestionsDatabase.instance.execute(<<-SQL, id
-      SELECT
-        *
-      FROM
-        replies
-      WHERE
-        id = ?
-    SQL
-    )
-    Reply.new(reply.first) unless reply.empty?
-  end
 
   def self.find_by_user_id(user_id)
     replies = QuestionsDatabase.instance.execute(<<-SQL, user_id

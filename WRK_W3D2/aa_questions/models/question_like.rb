@@ -1,22 +1,8 @@
-require_relative 'questions_database'
+class QuestionLike < ModelBase
 
-class QuestionLike
+  TABLE_NAME = 'question_likes'
 
   attr_reader :id, :question_id, :user_id
-
-  def self.find_by_id(id)
-    question_likes = QuestionsDatabase.instance.execute(<<-SQL, id
-      SELECT
-        *
-      FROM
-        question_likes
-      WHERE
-        id = ?
-    SQL
-    )
-    # debugger
-    QuestionLike.new(question_likes.first)
-  end
 
   def self.likers_for_question_id(question_id)
     likers = QuestionsDatabase.instance.execute(<<-SQL, question_id

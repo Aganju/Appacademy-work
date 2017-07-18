@@ -1,22 +1,10 @@
-require_relative 'questions_database'
 
-class QuestionFollow
+
+class QuestionFollow < ModelBase
+
+  TABLE_NAME = 'question_follows'
 
   attr_reader :id, :question_id, :user_id
-
-  def self.find_by_id(id)
-    question_follows = QuestionsDatabase.instance.execute(<<-SQL, id
-      SELECT
-        *
-      FROM
-        question_follows
-      WHERE
-        id = ?
-    SQL
-    )
-    # debugger
-    QuestionFollow.new(question_follows.first)
-  end
 
   def self.followers_for_question_id(question_id)
     followers = QuestionsDatabase.instance.execute(<<-SQL, question_id
@@ -68,7 +56,7 @@ class QuestionFollow
     )
     questions.map { |question| Question.new(question) }
   end
-  
+
   def initialize(options)
     @id = options['id']
     @question_id = options['question_id']

@@ -1,23 +1,10 @@
-require_relative 'questions_database'
 
-class User
+class User < ModelBase
+
+  TABLE_NAME = 'users'
 
   attr_reader :id
   attr_accessor :fname, :lname
-
-  def self.find_by_id(id)
-    user = QuestionsDatabase.instance.execute(<<-SQL, id
-      SELECT
-        *
-      FROM
-        users
-      WHERE
-        id = ?
-    SQL
-    )
-    # debugger
-    User.new(user.first)
-  end
 
   def self.find_by_name(fname, lname)
     user = QuestionsDatabase.instance.execute(<<-SQL, fname, lname

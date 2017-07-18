@@ -178,15 +178,20 @@ def craiglockhart_and_tollcross
   # Give the company and num of the services that connect stops
   # 'Craiglockhart' and 'Tollcross'
   execute(<<-SQL)
+  SELECT
     a.company,
     a.num
   FROM
-    routes as a
-  JOIN stops
-  Join routes as b
-    ON a.stop_id = 115 AND b.stop_id = 137
-    AND a.company = b.company AND  a.num = b.num
-  SQL
+    routes a
+  JOIN
+    routes b ON (a.company = b.company AND a.num = b.num)
+  JOIN
+    stops stopa ON (a.stop_id = stopa.id)
+  JOIN
+    stops stopb ON (b.stop_id = stopb.id)
+  WHERE
+    stopa.name = 'Craiglockhart' AND  stopb.name = 'Tollcross'
+SQL
 end
 
 def start_at_craiglockhart
@@ -194,6 +199,18 @@ def start_at_craiglockhart
   # by taking one bus, including 'Craiglockhart' itself. Include the stop name,
   # as well as the company and bus no. of the relevant service.
   execute(<<-SQL)
+    SELECT
+      stopb.name, a.company, a.num
+    FROM
+      routes a
+    JOIN routes b
+      ON (a.company = b.company AND a.num = b.num)
+    JOIN stops stopa
+      ON a.stop_id = stopa.id
+    JOIN stops stopb
+      ON b.stop_id = stopb.id
+    WHERE
+      stopa.name = 'Craiglockhart'
   SQL
 end
 
@@ -202,5 +219,23 @@ def craiglockhart_to_sighthill
   # Sighthill. Show the bus no. and company for the first bus, the name of the
   # stop for the transfer, and the bus no. and company for the second bus.
   execute(<<-SQL)
+    SELECT DISTINCT
+      a.num, a.company, stopb.name, d.num, d.company
+    FROM
+      routes a
+    JOIN routes b
+      ON (a.company = b.company AND a.num = b.num)
+    JOIN routes c
+      ON (c.num != b.num AND b.stop_id = c.stop_id)
+    JOIN routes d
+      ON (c.company = d.company AND c.num = d.num)
+    JOIN stops stopa
+      ON a.stop_id = stopa.id
+    JOIN stops stopb
+      ON b.stop_id = stopb.id
+    JOIN stops stopd
+      ON d.stop_id = stopd.id
+    WHERE
+      stopa.name = 'Craiglockhart' AND stopd.name = 'Sighthill'
   SQL
 end

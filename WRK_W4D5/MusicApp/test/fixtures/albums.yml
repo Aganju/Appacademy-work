@@ -1,0 +1,19 @@
+# == Schema Information
+#
+# Table name: albums
+#
+#  id         :integer          not null, primary key
+#  name       :string
+#  live       :string
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  band_id    :integer
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name.string: MyString
+
+two:
+  name.string: MyString

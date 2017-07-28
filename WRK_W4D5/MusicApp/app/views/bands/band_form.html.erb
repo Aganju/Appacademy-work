@@ -1,0 +1,8 @@
+<%=  flash[:errors]%>
+<form action="<%= @band.persisted? ? album_url : new_band_url %>" method="post">
+  <%= auth_token %>
+  <%= change_method('update') if @band.persisted? %>
+  <label for="name">Band Name:</label>
+  <input id = 'name' type="text" name="band[name]" value="<%= @band.name %>">
+  <input type="submit" name="" value="submit">
+</form>
